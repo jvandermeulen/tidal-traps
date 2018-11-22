@@ -1,0 +1,24 @@
+---
+- hosts: localhost
+  name: Generate Nagios service files for import
+  gather_facts: false
+
+
+  vars:
+   my_xi_host: srtadapp0280.mgt.insim.biz
+   my_keyvaluepair_file: SVC_LIST.lst
+   my_jinja2_tmpl_file:  SVC.cfg.j2
+   my_output_file: SVC_output.cfg
+
+# key/value pair file needs colon sign between key and value: sed -i "s/\t/: \t/g" SVC_LIST.lst
+
+  tasks:
+  - name: Include var file
+    include_vars:
+      file: "{{ my_keyvaluepair_file }}"
+      name: nagiosservices
+
+  - name: Template
+    template:
+      src:  "{{ my_jinja2_tmpl_file }}"  # Jinja template uses capitalize function for severity field to make sure "minor" will be written as "Minor"
+      dest: "{{ my_output_file }}"

@@ -1,0 +1,13 @@
+# Service file for Nagios
+{% for key,value in nagiosservices.iteritems() %}
+
+define service {
+    host_name                {{ my_xi_host }}
+    service_description      {{ key }} [{{ value|capitalize }}]
+    use                      00_NNIP_Tidal_Job_Traps
+    max_check_attempts       1
+    check_period             xi_timeperiod_24x7
+    notification_period      xi_timeperiod_24x7
+    register                 1
+    }
+{% endfor %}
